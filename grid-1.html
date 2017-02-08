@@ -1,0 +1,308 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Eigenes Grid System</title>
+</head>
+
+<body>
+<h1>Eigenes Grid-System erstellen</h1>
+<p>Ein Grid-System besteht in aller Regel aus:</p>
+
+<ul>
+	<li>Einem Container</li>
+	<li>Reihen (rows)</li>
+	<li>Spalten (columns)</li>
+	<li>Spaltenabständen (gutters)</li>
+</ul>
+
+<h2>Der Container</h2>
+
+<p>Der Container beinhaltet die Reihen und Spalten. Die Breite beträgt zB 100%, kann aber auch durch max-width auf eine allgemeine Breite beschränkt werden (zB für große Monitore) </p>
+
+<h3>CSS-Code für Container</h3>
+
+<pre>
+	
+.grid-container {
+        width : 100%;
+        max-width : 1200px; 
+    }	
+	
+</pre>
+	<h2>Die Reihe</h2>
+
+<p>Reihen werden benötigt, um die Spalten nebeneneinander zu platzieren.</p>
+	
+<pre>
+	
+	/*-- our cleafix hack -- */
+    .row:before, 
+    .row:after {
+        content:"";
+        display: table ;
+        clear:both;
+    }
+	
+</pre>
+
+<h2>Die Spalten</h2>
+<p>Spalten sind der komplizierteste Teil. Damit leere Spalten nicht übereinander liegen, müssen wir eine Mindesthöhe von 1px vergeben.</p>
+<pre>
+	
+ [class*='col-'] {
+ float: left;
+  min-height: 1px; 
+    }	
+	
+	
+</pre>
+
+<h2>Spalten-Breiten</h2>
+<p>Damit wir eine flexible Spaltenbreite in Prozent finden, dividieren wir die Containerbreite durch die Anzahl der gewünschten Spalten, in unserem Fall 6 Spalten. Also 100/6 = 16.66 %. Damit haben wir eine Spaltenbreite</p>
+
+<pre>
+	
+ [class*='col-'] {
+        float: left;
+        min-height: 1px; 
+        width: 16.66%; 
+    }	
+	
+	
+</pre>
+
+<p>Das war jetzt mal ein Anfang. Damit wir nun entsprechende Spaltenbreiten haben, multiplizieren wir den Basiswert immer mit der gewünschten Spaltenbreite</p>
+
+<pre>
+	
+    .col-1{
+        width: 16.66%; 
+    }
+    .col-2{
+        width: 33.33%; 
+    }
+    .col-3{
+        width: 50%; 
+    }
+    .col-4{
+        width: 66.664%;
+    }
+    .col-5{
+        width: 83.33%;
+    }
+    .col-6{
+        width: 100%;
+    }	
+	
+	
+	
+</pre>
+
+<p>Wir müssen jetzt einfach berücksichtigen, dass die Gesamtanzahl der Spalten immer 6 ergibt.</p>
+
+<h2>Spaltenabstände</h2>
+<p>Durch das 'border-box'Modell, können wir relativ einfach die Spaltenabstände erzeugen.</p>
+
+<pre>
+	
+	/*-- setting border box on all elements inside the grid --*/
+    .grid-container *{
+        box-sizing: border-box; 
+    }
+
+    [class*='col-'] {
+        float: left;
+        min-height: 1px; 
+        width: 16.66%; 
+        /*-- our gutter --*/
+        padding: 12px;
+    }
+	
+	
+</pre>
+
+<h2>Das Basis Grid-System</h2>
+<pre>
+	
+	
+<div class="grid-container outline">
+    <div class="row">
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+    </div> 
+    <div class="row">
+        <div class="col-2"><p>col-2</p></div> 
+        <div class="col-2"><p>col-2</p></div> 
+        <div class="col-2"><p>col-2</p></div> 
+    </div> 
+    <div class="row">
+        <div class="col-3"><p>col-3</p></div> 
+        <div class="col-3"><p>col-3</p></div> 
+    </div> 
+</div>	
+	
+
+</pre>
+
+<h2>Das komplette CSS</h2>
+
+<pre>
+	
+    .grid-container{
+        width: 100%; 
+        max-width: 1200px;      
+    }
+
+    /*-- our cleafix hack -- */ 
+    .row:before, 
+    .row:after {
+        content:"";
+          display: table ;
+        clear:both;
+    }
+
+    [class*='col-'] {
+        float: left; 
+        min-height: 1px; 
+        width: 16.66%; 
+        /*-- our gutter -- */
+        padding: 12px; 
+        background-color: #FFDCDC;
+    }
+
+    .col-1{ width: 16.66%; }
+    .col-2{ width: 33.33%; }
+    .col-3{ width: 50%;    }
+    .col-4{ width: 66.66%; }
+    .col-5{ width: 83.33%; }
+    .col-6{ width: 100%;   }
+
+    .outline, .outline *{
+        outline: 1px solid #F6A1A1; 
+    }
+
+    /*-- some extra column content styling --*/
+    [class*='col-'] > p {
+     background-color: #FFC2C2; 
+     padding: 0;
+     margin: 0;
+     text-align: center; 
+     color: white; 
+    }	
+	
+	
+</pre>
+
+<h2>Der HTML-Code</h2>
+
+<pre>
+	
+	
+	<div class="grid-container outline">
+        <div class="row">
+            <div class="col-1"><p>col-1</p></div> 
+            <div class="col-1"><p>col-1</p></div> 
+            <div class="col-1"><p>col-1</p></div> 
+            <div class="col-1"><p>col-1</p></div> 
+            <div class="col-1"><p>col-1</p></div> 
+            <div class="col-1"><p>col-1</p></div> 
+        </div> 
+        <div class="row">
+            <div class="col-2"><p>col-2</p></div> 
+            <div class="col-2"><p>col-2</p></div> 
+            <div class="col-2"><p>col-2</p></div> 
+        </div> 
+        <div class="row">
+            <div class="col-3"><p>col-3</p></div> 
+            <div class="col-3"><p>col-3</p></div> 
+        </div> 
+    </div>
+	
+</pre>
+
+<h2>Responsive Grid</h2>
+<p>Für eine responsive Darstellung, müssen wir die Breiten der Spalten adaptieren. In diesem ersten einfachen Beispiel gehen wir davon aus, dass sich die Spaltenbreite verdoppelt, wenn die Bildschirmbreite kleiner 800px beträgt.</p>
+<p>Wir müssen jedoch beachten, dass die letzten Spalten 'hängen', in unserem Fall betrifft das .col-2 sowie .col-1 neben .col-5. Um das zu vermeiden, machen wir .col-2 und .col-1 100 % breit.</p>
+<pre>
+	
+	    @media all and (max-width:800px){
+        .col-1{ width: 33.33%;    }
+        .col-2{ width: 50%;        }
+        .col-3{ width: 83.33%;    }
+        .col-4{ width: 100%;    }
+        .col-5{ width: 100%;    }
+        .col-6{ width: 100%;      }
+
+        .row .col-2:last-of-type{
+            width: 100%; 
+        }
+
+        .row .col-5 ~ .col-1{
+            width: 100%; 
+        }
+    }
+	
+</pre>
+<h3>Bildschirme kleiner 800px</h3>
+<p>Für Bildschirme kleiner 800px und größer 650px setzen wir alle Spaltenbreiten auf 100%.</p>	
+	
+<pre>
+	
+	   @media all and (max-width:650px){
+        .col-1{ width: 50%;        }
+        .col-2{ width: 100%;    }
+        .col-3{ width: 100%;    }
+        .col-4{ width: 100%;    }
+        .col-5{ width: 100%;    }
+        .col-6{ width: 100%;      }
+    }
+	
+	
+</pre>
+
+<h2>Finales HTML</h2>
+
+	
+<pre>
+	
+	<div class="grid-container outline">
+    <div class="row">
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+    </div> 
+    <div class="row">
+        <div class="col-2"><p>col-2</p></div> 
+        <div class="col-2"><p>col-2</p></div> 
+        <div class="col-2"><p>col-2</p></div> 
+    </div> 
+    <div class="row">
+        <div class="col-3"><p>col-3</p></div> 
+        <div class="col-3"><p>col-3</p></div> 
+    </div> 
+    <div class="row">
+        <div class="col-4"><p>col-4</p></div> 
+        <div class="col-2"><p>col-2</p></div> 
+    </div> 
+    <div class="row">
+        <div class="col-5"><p>col-5</p></div> 
+        <div class="col-1"><p>col-1</p></div> 
+    </div> 
+    <div class="row">
+        <div class="col-6"><p>col-6</p></div> 
+    </div> 
+</div>
+	
+	
+</pre>
+
+</body>
+</html>
